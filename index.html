@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kikito Button (Mobile Friendly)</title>
+    <title>Kikito Button (Fonte Consistente)</title>
     <style>
-        /* Melhoria: Garante que o layout ocupe a tela toda sem problemas */
+        /* --- NOVO: Importação da Fonte do Google --- */
+        /* Esta linha deve ser a PRIMEIRA dentro de <style> */
+        @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+
         html, body {
             height: 100%;
             margin: 0;
@@ -17,8 +20,9 @@
             justify-content: center;
             align-items: center;
             background-color: #222;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            overflow: hidden; /* Evita barras de rolagem desnecessárias */
+            /* --- MUDANÇA: Aplicando a nova fonte --- */
+            font-family: 'Luckiest Guy', cursive; /* 'Luckiest Guy' agora é a principal */
+            overflow: hidden;
         }
 
         .button-container {
@@ -27,30 +31,18 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            padding: 20px; /* Adiciona um respiro nas bordas da tela */
+            padding: 20px;
         }
 
         #bigRedButton {
-            /* --- MELHORIA PARA CELULAR: Tamanho Responsivo --- */
-            /* Usa 'vmin' (a menor dimensão da tela: altura ou largura) para o tamanho */
             width: 70vmin;
             height: 70vmin;
-            /* Define um tamanho máximo para não ficar gigante em telas grandes */
             max-width: 300px;
             max-height: 300px;
-            
-            /* --- MELHORIA PARA CELULAR: Fonte Responsiva --- */
-            /* clamp(MIN, PREFERIDO, MAX) - a fonte se ajusta à largura da tela */
             font-size: clamp(1.5rem, 10vmin, 3em);
-
-            /* --- MELHORIA PARA CELULAR: Interação de Toque --- */
-            -webkit-tap-highlight-color: transparent; /* Remove o destaque cinza ao tocar no botão (iOS/Android) */
-            user-select: none; /* Impede que o texto do botão seja selecionado */
-            
-            /* --- MELHORIA DE PERFORMANCE --- */
-            /* Avisa o navegador que essas propriedades vão mudar, otimizando a animação */
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
             will-change: transform, opacity, box-shadow;
-
             background-color: #e74c3c;
             border-radius: 50%;
             border: 20px solid #c0392b;
@@ -88,18 +80,15 @@
             transform: scale(0);
             animation: explode 0.5s forwards;
             z-index: 1;
-            /* --- MELHORIA DE PERFORMANCE --- */
             will-change: transform, opacity;
         }
 
         #kikitoMessage {
-            /* --- MELHORIA PARA CELULAR: Fonte Responsiva --- */
-            font-size: clamp(2rem, 12vw, 4rem); /* Aumenta com a tela, mas tem limites */
-            text-align: center; /* Centraliza o texto caso ele quebre a linha em telas muito pequenas */
-            
+            font-size: clamp(2rem, 12vw, 4rem);
+            text-align: center;
             margin-top: 40px;
             color: #f1c40f;
-            font-weight: bold;
+            font-weight: bold; /* O peso da fonte 'Luckiest Guy' já é bold por natureza */
             letter-spacing: 5px;
             text-shadow: 4px 4px 8px rgba(0,0,0,0.7);
             display: none;
@@ -110,11 +99,10 @@
             transform: translateY(-20px) scale(0.5);
             display: inline-block;
             animation: appearLetter 0.3s ease-out forwards;
-            /* --- MELHORIA DE PERFORMANCE --- */
             will-change: transform, opacity;
         }
 
-        /* Animações (keyframes) permanecem as mesmas, pois já usam 'transform', que é bom para performance */
+        /* Animações (keyframes) permanecem as mesmas */
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         @keyframes explode { from { opacity: 1; transform: scale(1) translate(0, 0); } to { opacity: 0; transform: scale(0) translate(var(--x), var(--y)); } }
         @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
@@ -137,7 +125,6 @@
 
         button.addEventListener('click', () => {
             button.classList.add('hidden');
-
             for (let i = 0; i < 30; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('explosion-particle');
@@ -152,39 +139,29 @@
                 particle.style.transform = 'translate(-50%, -50%)';
                 mainContainer.appendChild(particle);
             }
-
             document.body.classList.add('tremor');
-            setTimeout(() => {
-                document.body.classList.remove('tremor');
-            }, 500);
-
+            setTimeout(() => { document.body.classList.remove('tremor'); }, 500);
             kikitoMessageDiv.style.display = 'block';
             kikitoMessageDiv.innerHTML = '';
             let charIndex = 0;
-
             function typeLetter() {
                 if (charIndex < message.length) {
                     const span = document.createElement('span');
                     span.textContent = message[charIndex];
                     span.classList.add('kikito-letter');
                     kikitoMessageDiv.appendChild(span);
-
                     setTimeout(() => {
                         span.style.animationDelay = '0s';
                         span.style.animationPlayState = 'running';
                     }, 50);
-
                     charIndex++;
                     setTimeout(typeLetter, 200);
                 } else {
                     const cursorSpan = document.createElement('span');
                     cursorSpan.innerHTML = '&nbsp;';
                     cursorSpan.style.cssText = `
-                        display: inline-block;
-                        width: .15em;
-                        height: 1.2em;
-                        background-color: orange;
-                        vertical-align: middle;
+                        display: inline-block; width: .15em; height: 1.2em;
+                        background-color: orange; vertical-align: middle;
                         animation: blink-caret 0.75s step-end infinite;
                     `;
                     kikitoMessageDiv.appendChild(cursorSpan);

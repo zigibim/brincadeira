@@ -3,17 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kikito Button</title>
+    <title>Kikito Button (Mobile Friendly)</title>
     <style>
+        /* Melhoria: Garante que o layout ocupe a tela toda sem problemas */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
             background-color: #222;
-            margin: 0;
             font-family: 'Comic Sans MS', cursive, sans-serif;
-            overflow: hidden;
+            overflow: hidden; /* Evita barras de rolagem desnecessárias */
         }
 
         .button-container {
@@ -22,22 +27,39 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            padding: 20px; /* Adiciona um respiro nas bordas da tela */
         }
 
         #bigRedButton {
-            width: 300px;
-            height: 300px;
+            /* --- MELHORIA PARA CELULAR: Tamanho Responsivo --- */
+            /* Usa 'vmin' (a menor dimensão da tela: altura ou largura) para o tamanho */
+            width: 70vmin;
+            height: 70vmin;
+            /* Define um tamanho máximo para não ficar gigante em telas grandes */
+            max-width: 300px;
+            max-height: 300px;
+            
+            /* --- MELHORIA PARA CELULAR: Fonte Responsiva --- */
+            /* clamp(MIN, PREFERIDO, MAX) - a fonte se ajusta à largura da tela */
+            font-size: clamp(1.5rem, 10vmin, 3em);
+
+            /* --- MELHORIA PARA CELULAR: Interação de Toque --- */
+            -webkit-tap-highlight-color: transparent; /* Remove o destaque cinza ao tocar no botão (iOS/Android) */
+            user-select: none; /* Impede que o texto do botão seja selecionado */
+            
+            /* --- MELHORIA DE PERFORMANCE --- */
+            /* Avisa o navegador que essas propriedades vão mudar, otimizando a animação */
+            will-change: transform, opacity, box-shadow;
+
             background-color: #e74c3c;
             border-radius: 50%;
             border: 20px solid #c0392b;
-            box-shadow: 0 15px #a02c20,
-                        0 0 50px rgba(231, 76, 60, 0.7);
+            box-shadow: 0 15px #a02c20, 0 0 50px rgba(231, 76, 60, 0.7);
             cursor: pointer;
             transition: transform 0.1s ease-out, opacity 0.3s ease-out;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 3em;
             color: white;
             font-weight: bold;
             text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
@@ -48,8 +70,7 @@
 
         #bigRedButton:active {
             transform: translateY(5px);
-            box-shadow: 0 10px #a02c20,
-                        0 0 40px rgba(231, 76, 60, 0.5);
+            box-shadow: 0 10px #a02c20, 0 0 40px rgba(231, 76, 60, 0.5);
         }
 
         #bigRedButton.hidden {
@@ -67,55 +88,21 @@
             transform: scale(0);
             animation: explode 0.5s forwards;
             z-index: 1;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes explode {
-            from {
-                opacity: 1;
-                transform: scale(1) translate(0, 0);
-            }
-            to {
-                opacity: 0;
-                transform: scale(0) translate(var(--x), var(--y));
-            }
-        }
-
-        .tremor {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-            transform: translate3d(0, 0, 0);
-            backface-visibility: hidden;
-            perspective: 1000px;
-        }
-
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
+            /* --- MELHORIA DE PERFORMANCE --- */
+            will-change: transform, opacity;
         }
 
         #kikitoMessage {
+            /* --- MELHORIA PARA CELULAR: Fonte Responsiva --- */
+            font-size: clamp(2rem, 12vw, 4rem); /* Aumenta com a tela, mas tem limites */
+            text-align: center; /* Centraliza o texto caso ele quebre a linha em telas muito pequenas */
+            
             margin-top: 40px;
-            font-size: 4em;
             color: #f1c40f;
             font-weight: bold;
             letter-spacing: 5px;
             text-shadow: 4px 4px 8px rgba(0,0,0,0.7);
-            white-space: nowrap;
-            overflow: hidden;
-            border-right: .15em solid orange;
             display: none;
-        }
-
-        @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: orange; }
         }
 
         .kikito-letter {
@@ -123,14 +110,17 @@
             transform: translateY(-20px) scale(0.5);
             display: inline-block;
             animation: appearLetter 0.3s ease-out forwards;
+            /* --- MELHORIA DE PERFORMANCE --- */
+            will-change: transform, opacity;
         }
 
-        @keyframes appearLetter {
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
+        /* Animações (keyframes) permanecem as mesmas, pois já usam 'transform', que é bom para performance */
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes explode { from { opacity: 1; transform: scale(1) translate(0, 0); } to { opacity: 0; transform: scale(0) translate(var(--x), var(--y)); } }
+        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: orange; } }
+        @keyframes appearLetter { to { opacity: 1; transform: translateY(0) scale(1); } }
+
     </style>
 </head>
 <body>
@@ -185,9 +175,8 @@
                     }, 50);
 
                     charIndex++;
-                    setTimeout(typeLetter, 200); // Velocidade mais lenta
+                    setTimeout(typeLetter, 200);
                 } else {
-                    kikitoMessageDiv.style.borderRight = '.15em solid transparent';
                     const cursorSpan = document.createElement('span');
                     cursorSpan.innerHTML = '&nbsp;';
                     cursorSpan.style.cssText = `
@@ -201,7 +190,7 @@
                     kikitoMessageDiv.appendChild(cursorSpan);
                 }
             }
-            setTimeout(typeLetter, 600); // Delay inicial antes da mensagem aparecer
+            setTimeout(typeLetter, 600);
         });
     </script>
 </body>
